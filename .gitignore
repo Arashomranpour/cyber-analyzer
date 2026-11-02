@@ -221,7 +221,7 @@ terraform.tfstate.d/
 *.auto.tfvars
 terraform.tfvars
 
-# Claude Code
+# Local tooling
 .claude/
 
 # Python template ignores lib/, but the frontend has real source in src/lib

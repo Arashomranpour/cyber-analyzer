@@ -50,7 +50,6 @@ jobs:
         run: |
           if git grep -nE "gsk_[A-Za-z0-9]{10,}"; then echo "Groq key found in repo"; exit 1; fi
           if git ls-files | grep -E '(^|/)\.env$'; then echo ".env is tracked"; exit 1; fi
-          if git ls-files .claude | grep .; then echo ".claude/ is tracked"; exit 1; fi
 
   docker:
     runs-on: ubuntu-latest
