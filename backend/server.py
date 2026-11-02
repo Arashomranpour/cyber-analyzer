@@ -7,7 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from typing import List
 from dotenv import load_dotenv
-from groq import AuthenticationError, Groq, RateLimitError
+from groq import APIStatusError, AuthenticationError, Groq, RateLimitError
 from langchain_groq import ChatGroq
 from langgraph.prebuilt import create_react_agent
 
@@ -182,6 +182,16 @@ async def analyze_code(
         raise HTTPException(
             status_code=401, detail="Groq rejected the API key. Please connect a key again."
         )
+    except APIStatusError as e:
+        if e.status_code == 413:
+            logger.warning("Groq request too large for the key's token limit")
+            raise HTTPException(
+                status_code=413,
+                detail="This code produced more findings than your Groq plan's per-minute token "
+                "limit allows. Try a shorter snippet or wait a minute.",
+            )
+        logger.exception("Analysis failed")
+        raise HTTPException(status_code=500, detail="Analysis failed. Please try again.")
     except Exception:
         # Provider errors can contain org details, so log them server-side only.
         logger.exception("Analysis failed")
