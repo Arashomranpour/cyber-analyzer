@@ -1,0 +1,68 @@
+name: Deploy to Azure
+
+# Infrastructure is created once with Terraform (terraform/azure).
+# This workflow only builds the image, pushes it to ACR and rolls out a new revision.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  id-token: write # OIDC login to Azure, no stored credentials
+  contents: read
+
+concurrency:
+  group: deploy-azure
+  cancel-in-progress: false
+
+env:
+  RESOURCE_GROUP: ${{ vars.AZURE_RESOURCE_GROUP }}
+  ACR_NAME: ${{ vars.AZURE_ACR_NAME }}
+  APP_NAME: ${{ vars.AZURE_CONTAINER_APP }}
+
+jobs:
+  test:
+    uses: ./.github/workflows/ci.yml
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Log in to ACR
+        run: az acr login --name "$ACR_NAME"
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.ACR_NAME }}.azurecr.io/cyber-analyzer:${{ github.sha }}
+            ${{ env.ACR_NAME }}.azurecr.io/cyber-analyzer:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Roll out new revision
+        run: |
+          az containerapp update \
+            --name "$APP_NAME" \
+            --resource-group "$RESOURCE_GROUP" \
+            --image "$ACR_NAME.azurecr.io/cyber-analyzer:${{ github.sha }}"
+
+      - name: Show URL
+        run: |
+          fqdn=$(az containerapp show -n "$APP_NAME" -g "$RESOURCE_GROUP" --query properties.configuration.ingress.fqdn -o tsv)
+          echo "Deployed: https://$fqdn" | tee -a "$GITHUB_STEP_SUMMARY"
