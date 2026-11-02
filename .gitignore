@@ -223,3 +223,6 @@ terraform.tfvars
 
 # Claude Code
 .claude/
+
+# Python template ignores lib/, but the frontend has real source in src/lib
+!frontend/src/lib/
