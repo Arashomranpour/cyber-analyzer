@@ -6,10 +6,6 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "~> 3.0"
     }
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "~> 3.0"
-    }
     random = {
       source  = "hashicorp/random"
       version = "~> 3.6"
@@ -55,32 +51,8 @@ resource "azurerm_container_registry" "acr" {
   }
 }
 
-# Configure Docker provider to use ACR
-provider "docker" {
-  registry_auth {
-    address  = azurerm_container_registry.acr.login_server
-    username = azurerm_container_registry.acr.admin_username
-    password = azurerm_container_registry.acr.admin_password
-  }
-}
-
-# Build and push Docker image
-resource "docker_image" "app" {
-  name = "${azurerm_container_registry.acr.login_server}/${var.project_name}:${var.docker_image_tag}"
-  
-  build {
-    context    = "${path.module}/../.."
-    dockerfile = "Dockerfile"
-    platform   = "linux/amd64"
-    no_cache   = true
-  }
-}
-
-resource "docker_registry_image" "app" {
-  name = docker_image.app.name
-  
-  depends_on = [docker_image.app]
-}
+# NOTE: the container image is built and pushed outside Terraform
+# (GitHub Actions: .github/workflows/deploy-azure.yml) and passed in as var.container_image.
 
 # Create Log Analytics Workspace for monitoring
 resource "azurerm_log_analytics_workspace" "main" {
@@ -119,7 +91,7 @@ resource "azurerm_container_app" "main" {
   template {
     container {
       name   = "main"
-      image  = docker_registry_image.app.name
+      image  = var.container_image
       cpu    = 1.0
       memory = "2.0Gi"
 
@@ -168,6 +140,11 @@ resource "azurerm_container_app" "main" {
   secret {
     name  = "registry-password"
     value = azurerm_container_registry.acr.admin_password
+  }
+
+  # CI/CD (GitHub Actions) rolls out new image tags; don't let Terraform revert them
+  lifecycle {
+    ignore_changes = [template[0].container[0].image]
   }
 
   tags = {

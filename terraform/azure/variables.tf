@@ -7,7 +7,7 @@ variable "project_name" {
 variable "location" {
   description = "Azure region for resources"
   type        = string
-  default     = "eastus"
+  default     = "germanywestcentral"
 }
 
 variable "resource_group_name" {
@@ -30,8 +30,7 @@ variable "semgrep_app_token" {
   default     = ""
 }
 
-variable "docker_image_tag" {
-  description = "Tag for the Docker image"
+variable "container_image" {
+  description = "Full image reference to run, e.g. <acr>.azurecr.io/cyber-analyzer:<tag>"
   type        = string
-  default     = "latest"
 }
