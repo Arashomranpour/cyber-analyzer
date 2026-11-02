@@ -100,8 +100,8 @@ resource "google_cloud_run_service" "app" {
         }
 
         env {
-          name  = "OPENAI_API_KEY"
-          value = var.openai_api_key
+          name  = "GROQ_API_KEY"
+          value = var.groq_api_key
         }
 
         env {

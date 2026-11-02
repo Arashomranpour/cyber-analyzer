@@ -1,5 +1,13 @@
 from dotenv import load_dotenv
-from agents import Agent, Runner, function_tool
+import os
+from openai import AsyncOpenAI
+from agents import (
+    Agent,
+    OpenAIChatCompletionsModel,
+    Runner,
+    function_tool,
+    set_tracing_disabled,
+)
 import gradio as gr
 import sqlite3
 import traceback
@@ -7,7 +15,15 @@ import traceback
 
 load_dotenv(override=True)
 
-MODEL = "gpt-4.1-mini"
+# Tracing uploads to OpenAI and needs an OpenAI key, which we no longer use
+set_tracing_disabled(True)
+
+groq_client = AsyncOpenAI(
+    base_url="https://api.groq.com/openai/v1", api_key=os.getenv("GROQ_API_KEY")
+)
+MODEL = OpenAIChatCompletionsModel(
+    model=os.getenv("GROQ_MODEL", "openai/gpt-oss-120b"), openai_client=groq_client
+)
 
 instructions = "You are a helpful assistant for an Airline called FlightAI. "
 instructions += "Use your tools to get ticket prices and calculate discounts. Trips to London have a 10% discount on the price. "

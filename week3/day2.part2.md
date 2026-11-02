@@ -57,7 +57,7 @@ export TF_VAR_project_id="cyber-analyzer-123456"
 
 # Verify they're loaded
 echo "Project ID: $TF_VAR_project_id"
-echo "OpenAI key loaded: ${OPENAI_API_KEY:0:8}..."
+echo "Groq key loaded: ${GROQ_API_KEY:0:8}..."
 echo "Semgrep token loaded: ${SEMGREP_APP_TOKEN:0:8}..."
 ```
 
@@ -74,7 +74,7 @@ $env:TF_VAR_project_id = "cyber-analyzer-123456"
 
 # Verify they're loaded
 Write-Host "Project ID: $env:TF_VAR_project_id"
-Write-Host "OpenAI key loaded: $($env:OPENAI_API_KEY.Substring(0,8))..."
+Write-Host "Groq key loaded: $($env:GROQ_API_KEY.Substring(0,8))..."
 Write-Host "Semgrep token loaded: $($env:SEMGREP_APP_TOKEN.Substring(0,8))..."
 ```
 
@@ -145,14 +145,14 @@ On a Mac/Linux:
 ```bash
 # Plan the deployment (see what will be created)
 terraform plan \
-  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="groq_api_key=$GROQ_API_KEY" \
   -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
 ```
 
 On PC:
 
 ```powershell
-terraform plan -var ("openai_api_key=" + $Env:OPENAI_API_KEY) -var ("semgrep_app_token=" + $Env:SEMGREP_APP_TOKEN)
+terraform plan -var ("groq_api_key=" + $Env:GROQ_API_KEY) -var ("semgrep_app_token=" + $Env:SEMGREP_APP_TOKEN)
 ```
 
 
@@ -171,14 +171,14 @@ On a Mac/Linux:
 ```bash
 # Deploy everything
 terraform apply \
-  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="groq_api_key=$GROQ_API_KEY" \
   -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
 ```
 
 On a PC:
 
 ```powershell
-terraform apply -var ("openai_api_key=" + $Env:OPENAI_API_KEY) -var ("semgrep_app_token=" + $Env:SEMGREP_APP_TOKEN)
+terraform apply -var ("groq_api_key=" + $Env:GROQ_API_KEY) -var ("semgrep_app_token=" + $Env:SEMGREP_APP_TOKEN)
 ```
 
 
@@ -258,14 +258,14 @@ Run this command from the `terraform/gcp` directory (all on one line):
 Mac/Linux:
 
 ```bash
-terraform destroy -var="openai_api_key=$OPENAI_API_KEY" -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
+terraform destroy -var="groq_api_key=$GROQ_API_KEY" -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
 ```
 
 PC:
 
 
 ```powershell
-terraform destroy -var ("openai_api_key=" + $Env:OPENAI_API_KEY) -var ("semgrep_app_token=" + $Env:SEMGREP_APP_TOKEN)
+terraform destroy -var ("groq_api_key=" + $Env:GROQ_API_KEY) -var ("semgrep_app_token=" + $Env:SEMGREP_APP_TOKEN)
 ```
 
 Terraform will show you what will be destroyed. Review the list and type `yes` when prompted.
@@ -362,7 +362,7 @@ After making code changes:
 ```bash
 # Rebuild and redeploy with a new tag
 terraform apply \
-  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="groq_api_key=$GROQ_API_KEY" \
   -var="semgrep_app_token=$SEMGREP_APP_TOKEN" \
   -var="docker_image_tag=v2"
 ```
@@ -385,7 +385,7 @@ When you're done with the lab:
 ```bash
 # Destroy all resources
 terraform destroy \
-  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="groq_api_key=$GROQ_API_KEY" \
   -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
 ```
 
@@ -441,7 +441,7 @@ gcloud services enable cloudbuild.googleapis.com
 gcloud auth configure-docker
 
 # Retry the deployment
-terraform apply -var="openai_api_key=$OPENAI_API_KEY" -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
+terraform apply -var="groq_api_key=$GROQ_API_KEY" -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
 ```
 
 ---
@@ -535,7 +535,7 @@ gcloud organizations add-iam-policy-binding YOUR_ORG_ID \
 4. **Re-run Terraform**:
 ```bash
 terraform apply \
-  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="groq_api_key=$GROQ_API_KEY" \
   -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
 ```
 

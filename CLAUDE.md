@@ -7,10 +7,10 @@
 - This project is called Cybersecurity Analyzer - it runs an Agent
 - The project will be deployed locally with npm and uv run (working), also locally as a single Docker container (working), to Azure Container App (working), and to GCP Cloud Run (not started)
 - The project root is ~/projects/cyber
-- There is a .env file in the project root; you may not be able to see it for security reasons, but it's there, with OPENAI_API_KEY and SEMGREP_APP_TOKEN
+- There is a .env file in the project root; you may not be able to see it for security reasons, but it's there, with GROQ_API_KEY and SEMGREP_APP_TOKEN
 
 ## Project Overview
-Cybersecurity Analyzer - A web application for analyzing Python code for security vulnerabilities using AI-powered analysis with OpenAI and Semgrep.
+Cybersecurity Analyzer - A web application for analyzing Python code for security vulnerabilities using AI-powered analysis with Groq and Semgrep.
 
 **Educational Purpose**: This project serves as a teaching tool for students learning cloud deployment on Azure and Google Cloud Platform. Students will gain hands-on experience deploying containerized applications using modern serverless platforms.
 
@@ -22,7 +22,7 @@ Cybersecurity Analyzer - A web application for analyzing Python code for securit
 - **Backend**: FastAPI with Python 3.12
   - Located in `backend/`
   - Runs on port 8000
-  - Uses OpenAI Agents SDK with Semgrep MCP server
+  - Uses LangChain + LangGraph (ChatGroq, langchain-mcp-adapters) with Semgrep MCP server; langchain-mcp-adapters is pinned to 0.1.9 because newer versions need a newer mcp than the pinned 1.12.2
 
 ## Key Technical Decisions
 
@@ -42,7 +42,7 @@ Cybersecurity Analyzer - A web application for analyzing Python code for securit
 
 ### Environment Variables
 Required in `.env` file:
-- `OPENAI_API_KEY` - For OpenAI API access
+- `GROQ_API_KEY` - For Groq API access
 - `SEMGREP_APP_TOKEN` - For Semgrep analysis
 
 ### Local Development
@@ -171,3 +171,8 @@ docker stop cyber-analyzer
    - M1 Mac builds ARM64 by default, Azure needs AMD64
    - Solution: `platform = "linux/amd64"` in Terraform Docker build
    - Slight performance penalty on M1 Macs but ensures compatibility
+### Bring-your-own-key (BYOK)
+- The web app never uses a server-side `GROQ_API_KEY`; visitors paste their own key in the UI
+- Frontend keeps the key in React state only (no localStorage/URL) and sends it as the `X-Groq-Api-Key` header
+- Backend: `POST /api/validate-key` (lists models, spends no tokens) and `POST /api/analyze` build the Groq client per request
+- Provider errors are logged server-side; clients only get friendly messages (rate limit / bad key)

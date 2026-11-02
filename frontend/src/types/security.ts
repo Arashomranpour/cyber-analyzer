@@ -2,13 +2,17 @@
  * Type definitions for security analysis components
  */
 
+export type Severity = 'critical' | 'high' | 'medium' | 'low';
+
 export interface SecurityIssue {
   title: string;
   description: string;
   code: string;
   fix: string;
   cvss_score: number;
-  severity: 'critical' | 'high' | 'medium' | 'low';
+  severity: Severity;
+  cwe?: string;
+  owasp?: string;
 }
 
 export interface AnalysisResponse {
@@ -16,18 +20,26 @@ export interface AnalysisResponse {
   issues: SecurityIssue[];
 }
 
-export interface FileUploadProps {
+export interface HistoryEntry {
+  id: number;
   fileName: string;
-  onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onAnalyzeCode: () => void;
-  isAnalyzing: boolean;
-  hasCode: boolean;
+  timestamp: string;
+  results: AnalysisResponse;
+}
+
+export interface ApiKeyPanelProps {
+  isConnected: boolean;
+  onConnect: (key: string) => Promise<string | null>;
+  onForget: () => void;
 }
 
 export interface CodeInputProps {
   codeContent: string;
   fileName: string;
-  onFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onCodeChange: (code: string) => void;
+  onFileSelected: (file: File) => void;
+  onLoadSample: () => void;
+  onClear: () => void;
   onAnalyzeCode: () => void;
   isAnalyzing: boolean;
 }
@@ -36,4 +48,5 @@ export interface AnalysisResultsProps {
   analysisResults: AnalysisResponse | null;
   isAnalyzing: boolean;
   error: string | null;
+  fileName: string;
 }

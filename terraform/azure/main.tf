@@ -124,8 +124,8 @@ resource "azurerm_container_app" "main" {
       memory = "2.0Gi"
 
       env {
-        name  = "OPENAI_API_KEY"
-        value = var.openai_api_key
+        name  = "GROQ_API_KEY"
+        value = var.groq_api_key
       }
 
       env {

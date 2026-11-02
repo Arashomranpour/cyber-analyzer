@@ -34,7 +34,7 @@ Terraform will read your API keys from environment variables. We'll load them fr
 export $(cat .env | xargs)
 
 # Verify they're loaded
-echo "OpenAI key loaded: ${OPENAI_API_KEY:0:8}..."
+echo "Groq key loaded: ${GROQ_API_KEY:0:8}..."
 echo "Semgrep token loaded: ${SEMGREP_APP_TOKEN:0:8}..."
 ```
 
@@ -47,7 +47,7 @@ Get-Content .env | ForEach-Object {
 }
 
 # Verify they're loaded
-Write-Host "OpenAI key loaded: $($env:OPENAI_API_KEY.Substring(0,8))..."
+Write-Host "Groq key loaded: $($env:GROQ_API_KEY.Substring(0,8))..."
 Write-Host "Semgrep token loaded: $($env:SEMGREP_APP_TOKEN.Substring(0,8))..."
 ```
 
@@ -122,7 +122,7 @@ Now let's deploy everything with a single command:
 ```bash
 # Plan the deployment (see what will be created)
 terraform plan \
-  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="groq_api_key=$GROQ_API_KEY" \
   -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
 ```
 
@@ -140,14 +140,14 @@ Om a Mac / Linux:
 ```bash
 # Deploy everything
 terraform apply \
-  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="groq_api_key=$GROQ_API_KEY" \
   -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
 ```
 
 On PC in Powershell:
 
 ```powershell
-terraform apply -var ("openai_api_key=" + $Env:OPENAI_API_KEY) -var ("semgrep_app_token=" + $Env:SEMGREP_APP_TOKEN)
+terraform apply -var ("groq_api_key=" + $Env:GROQ_API_KEY) -var ("semgrep_app_token=" + $Env:SEMGREP_APP_TOKEN)
 ```
 
 Type `yes` when prompted. This will take 5-10 minutes as it:
@@ -244,14 +244,14 @@ For a Mac/Linux:
 ```bash
 # Destroy all resources created by Terraform
 terraform destroy \
-  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="groq_api_key=$GROQ_API_KEY" \
   -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
 ```
 
 For a PC:
 
 ```powershell
-terraform destroy -var ("openai_api_key=" + $Env:OPENAI_API_KEY) -var ("semgrep_app_token=" + $Env:SEMGREP_APP_TOKEN)
+terraform destroy -var ("groq_api_key=" + $Env:GROQ_API_KEY) -var ("semgrep_app_token=" + $Env:SEMGREP_APP_TOKEN)
 ```
 
 Terraform will show you what will be destroyed. Review the list and type `yes` when prompted.
@@ -342,7 +342,7 @@ After making code changes:
 ```bash
 # Rebuild and redeploy
 terraform apply \
-  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="groq_api_key=$GROQ_API_KEY" \
   -var="semgrep_app_token=$SEMGREP_APP_TOKEN" \
   -var="docker_image_tag=v2"
 ```
@@ -353,7 +353,7 @@ When you're done with the lab:
 ```bash
 # Destroy all resources
 terraform destroy \
-  -var="openai_api_key=$OPENAI_API_KEY" \
+  -var="groq_api_key=$GROQ_API_KEY" \
   -var="semgrep_app_token=$SEMGREP_APP_TOKEN"
 ```
 

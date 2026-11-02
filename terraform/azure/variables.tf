@@ -16,8 +16,8 @@ variable "resource_group_name" {
   default     = "cyber-analyzer-rg"
 }
 
-variable "openai_api_key" {
-  description = "OpenAI API key for the application"
+variable "groq_api_key" {
+  description = "Groq API key for the application"
   type        = string
   sensitive   = true
   default     = ""

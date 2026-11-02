@@ -5,7 +5,7 @@ Welcome to Week 3 of AI in Production! Over the next two days, you'll deploy a r
 ## What You'll Build
 
 The **Cybersecurity Analyzer** is an AI-powered web application that analyzes Python code for security vulnerabilities. It combines:
-- OpenAI's latest models for intelligent code analysis
+- Groq-hosted open models for intelligent code analysis
 - Semgrep for static security scanning
 - A React/Next.js frontend
 - A FastAPI backend
@@ -87,12 +87,12 @@ Now let's create your `.env` file with the necessary API keys.
 4. Add the following content:
 
 ```
-OPENAI_API_KEY=your-openai-key-here
+GROQ_API_KEY=your-groq-key-here
 SEMGREP_APP_TOKEN=your-semgrep-token-here
 ```
 
 5. Replace the placeholder values:
-   - `your-openai-key-here` - Your OpenAI API key from previous weeks
+   - `your-groq-key-here` - Your Groq API key from previous weeks
    - `your-semgrep-token-here` - The Semgrep token you just created
 6. Save the file (`Cmd+S` on Mac, `Ctrl+S` on Windows/Linux)
 
@@ -102,7 +102,7 @@ SEMGREP_APP_TOKEN=your-semgrep-token-here
 
 Your `.env` file should look similar to this (but with your actual keys):
 ```
-OPENAI_API_KEY=sk-proj-abc123xyz...
+GROQ_API_KEY=gsk_abc123xyz...
 SEMGREP_APP_TOKEN=eyJ0eXAiOiJKV1QiLCJhbGc...
 ```
 
